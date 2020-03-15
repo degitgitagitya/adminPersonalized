@@ -24,13 +24,13 @@ const DATA_MENU = [
     route: "/siswa"
   },
   {
-    no: 3,
+    no: 4,
     nama: "Materi",
     icon: "fa-book",
     route: "/materi"
   },
   {
-    no: 3,
+    no: 5,
     nama: "Evaluasi",
     icon: "fa-pencil-ruler",
     route: "/evaluasi"
@@ -56,7 +56,7 @@ export default class SideBar extends Component {
           <div className="row">
             <div className="col-3">
               <div className="sidebar-icon-user">
-                <i class="fas fa-user"></i>
+                <i className="fas fa-user"></i>
               </div>
             </div>
             <div className="col-9">
