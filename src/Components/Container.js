@@ -2,9 +2,9 @@ import React from "react";
 
 import "./Container.css";
 
-const NavLink = props => {
+const Container = props => {
   const { children } = props;
   return <div className="page-container">{children}</div>;
 };
 
-export default NavLink;
+export default Container;
