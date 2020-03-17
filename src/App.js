@@ -10,6 +10,7 @@ import Evaluasi from "./Pages/Evaluasi";
 import Siswa from "./Pages/Siswa";
 import Materi from "./Pages/Materi";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
+import NotFound from "./Pages/NotFound";
 
 export default class App extends Component {
   render() {
@@ -43,6 +44,7 @@ export default class App extends Component {
               path="/evaluasi"
               component={Evaluasi}
             ></ProtectedRoute>
+            <Route path="*" component={() => <NotFound />} />
           </Switch>
         </Authentication>
       </Router>
