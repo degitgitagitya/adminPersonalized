@@ -1,32 +1,31 @@
 import React, { Component } from "react";
 import ReactModal from "react-modal";
 
-import { AuthContext } from "../Contexts/Authentication";
 import SideBar from "../Components/SideBar";
 import BreadCumbs from "../Components/BreadCumbs";
 import Container from "../Components/Container";
 import ReactTable from "../Components/ReactTable";
 
-import "./Kelas.css";
-import { withRouter } from "react-router-dom";
+import "./Kuesioner.css";
 
-class Kelas extends Component {
-  static contextType = AuthContext;
-
+export default class Kuesioner extends Component {
   state = {
-    showModal: false,
-    edit: false,
     head: [
       {
-        Header: "Data Kelas",
+        Header: "Data Kuesioner",
         columns: [
           {
             Header: "No",
             Cell: ({ row }) => <div>{row.index + 1}</div>
           },
           {
-            Header: "Nama Kelas",
-            accessor: "nama",
+            Header: "Pertanyaan",
+            accessor: "pertanyaan",
+            sortType: "basic"
+          },
+          {
+            Header: "Gaya Belajar",
+            accessor: "id_gaya_belajar",
             sortType: "basic"
           },
           {
@@ -67,45 +66,57 @@ class Kelas extends Component {
       }
     ],
     body: [],
-    inputNama: "",
-    idKelas: ""
+    modalShow: false,
+    edit: false,
+    inputPertanyaan: "",
+    inputGaya: "",
+    idQuesioner: ""
   };
 
-  onChangeNama = event => {
+  handleOpenModalAdd = () => {
+    this.setState({ showModal: true, edit: false });
+  };
+
+  handleCloseModal = () => {
     this.setState({
-      inputNama: event.target.value
+      showModal: false,
+      inputPertanyaan: "",
+      inputGaya: ""
     });
   };
 
-  handleClickEdit = data => {
+  onChangePertanyaan = event => {
     this.setState({
-      inputNama: data.nama,
-      showModal: true,
-      edit: true,
-      idKelas: data.id
+      inputPertanyaan: event.target.value
     });
   };
 
-  updateKelas = () => {
+  onChangeGaya = event => {
+    this.setState({
+      inputGaya: event.target.value
+    });
+  };
+
+  handleAddButton = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      id_guru: this.context.data.id,
-      nama: this.state.inputNama
+      id_gaya_belajar: this.state.inputGaya,
+      pertanyaan: this.state.inputPertanyaan
     });
 
     const requestOptions = {
-      method: "PUT",
+      method: "POST",
       headers: myHeaders,
       body: raw,
       redirect: "follow"
     };
 
-    fetch(`http://127.0.0.1:5000/kelas/${this.state.idKelas}`, requestOptions)
+    fetch("http://127.0.0.1:5000/kuesioner", requestOptions)
       .then(response => response.json())
       .then(result => {
-        this.fetchDataKelas();
+        this.fetchDataKuesioner();
         this.handleCloseModal();
       })
       .catch(error => console.log("error", error));
@@ -117,57 +128,21 @@ class Kelas extends Component {
       redirect: "follow"
     };
 
-    fetch(`http://127.0.0.1:5000/kelas/${id}`, requestOptions)
+    fetch(`http://127.0.0.1:5000/kuesioner/${id}`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        this.fetchDataKelas();
+        this.fetchDataKuesioner();
       })
       .catch(error => console.log("error", error));
   };
 
-  handleAddButton = () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      id_guru: this.context.data.id,
-      nama: this.state.inputNama
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow"
-    };
-
-    fetch("http://127.0.0.1:5000/kelas", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        this.handleCloseModal();
-        this.fetchDataKelas();
-      })
-      .catch(error => console.log("error", error));
-  };
-
-  handleOpenModalAdd = () => {
-    this.setState({ showModal: true, edit: false });
-  };
-
-  handleCloseModal = () => {
-    this.setState({ showModal: false, inputNama: "" });
-  };
-
-  fetchDataKelas = () => {
+  fetchDataKuesioner = () => {
     const requestOptions = {
       method: "GET",
       redirect: "follow"
     };
 
-    fetch(
-      `http://127.0.0.1:5000/kelases/${this.context.data.id}`,
-      requestOptions
-    )
+    fetch("http://127.0.0.1:5000/kuesioners", requestOptions)
       .then(response => response.json())
       .then(result => {
         this.setState({
@@ -177,15 +152,53 @@ class Kelas extends Component {
       .catch(error => console.log("error", error));
   };
 
+  updateKuesioner = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      id_gaya_belajar: this.state.inputGaya,
+      pertanyaan: this.state.inputPertanyaan
+    });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(
+      `http://127.0.0.1:5000/kuesioner/${this.state.idQuesioner}`,
+      requestOptions
+    )
+      .then(response => response.json())
+      .then(result => {
+        this.fetchDataKuesioner();
+        this.handleCloseModal();
+      })
+      .catch(error => console.log("error", error));
+  };
+
+  handleClickEdit = data => {
+    this.setState({
+      showModal: true,
+      edit: true,
+      inputPertanyaan: data.pertanyaan,
+      inputGaya: data.id_gaya_belajar,
+      idQuesioner: data.id
+    });
+  };
+
   componentDidMount() {
-    this.fetchDataKelas();
+    this.fetchDataKuesioner();
   }
 
   render() {
     return (
       <div>
         <SideBar />
-        <BreadCumbs content="/Kelas" />
+        <BreadCumbs content="/Kuesioner" />
         <Container>
           <div className="page-box">
             <div className="page-button-container">
@@ -206,18 +219,27 @@ class Kelas extends Component {
               >
                 <h5>Tambah Kelas</h5>
 
-                <label htmlFor="nama">Nama Kelas</label>
+                <label htmlFor="pertanyaan">Pertanyaan</label>
                 <input
-                  value={this.state.inputNama}
-                  onChange={this.onChangeNama}
+                  value={this.state.inputPertanyaan}
+                  onChange={this.onChangePertanyaan}
                   type="text"
                   className="form-control mb-3"
-                  id="nama"
+                  id="pertanyaan"
+                />
+
+                <label htmlFor="gaya">Gaya Belajar</label>
+                <input
+                  value={this.state.inputGaya}
+                  onChange={this.onChangeGaya}
+                  type="text"
+                  className="form-control mb-3"
+                  id="gaya"
                 />
                 {this.state.edit ? (
                   <button
                     className="btn btn-success mr-3"
-                    onClick={this.updateKelas}
+                    onClick={this.updateKuesioner}
                   >
                     Edit
                   </button>
@@ -247,5 +269,3 @@ class Kelas extends Component {
     );
   }
 }
-
-export default withRouter(Kelas);

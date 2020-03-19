@@ -10,7 +10,7 @@ export default class Authentication extends Component {
 
   changeAuthToFalse = () => {
     this.setState({
-      isAuth: false,
+      isAuth: true,
       data: []
     });
   };

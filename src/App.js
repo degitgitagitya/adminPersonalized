@@ -11,6 +11,7 @@ import Siswa from "./Pages/Siswa";
 import Materi from "./Pages/Materi";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 import NotFound from "./Pages/NotFound";
+import Kuesioner from "./Pages/Kuesioner";
 
 export default class App extends Component {
   render() {
@@ -43,6 +44,11 @@ export default class App extends Component {
               exact
               path="/evaluasi"
               component={Evaluasi}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/kuesioner"
+              component={Kuesioner}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>

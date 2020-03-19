@@ -58,7 +58,7 @@ export default class Materi extends Component {
     return (
       <div>
         <SideBar />
-        <BreadCumbs content="/Siswa" />
+        <BreadCumbs content="/Materi" />
         <Container>
           <div className="page-box">
             <ReactTable head={DATA_HEAD} body={DATA_TABLE}></ReactTable>

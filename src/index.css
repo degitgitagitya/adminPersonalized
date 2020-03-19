@@ -38,6 +38,14 @@ code {
   margin-left: 0.833rem;
 }
 
+.action-button-view {
+  background-color: rgb(115, 207, 73);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  margin-left: 0.833rem;
+}
+
 .action-button-delete:hover {
   cursor: pointer;
   background-color: rgb(163, 74, 74);
@@ -48,6 +56,11 @@ code {
   background-color: rgb(138, 138, 67);
 }
 
+.action-button-view:hover {
+  cursor: pointer;
+  background-color: rgb(42, 199, 22);
+}
+
 .page-box {
   background-color: whitesmoke;
   box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
@@ -56,4 +69,36 @@ code {
     0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
   padding: 1.25rem;
   border-radius: 3px;
+}
+
+.page-button-container {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.page-button-container button {
+  margin-right: 1rem;
+}
+
+.modal-custom {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  right: 25%;
+  background-color: white;
+  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03),
+    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03),
+    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05),
+    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+  padding: 1.25rem;
+}
+
+.modal-overlay-custom {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
 }

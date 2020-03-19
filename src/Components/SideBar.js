@@ -19,21 +19,21 @@ const DATA_MENU = [
   },
   {
     no: 3,
-    nama: "Siswa",
-    icon: "fa-users",
-    route: "/siswa"
-  },
-  {
-    no: 4,
     nama: "Materi",
     icon: "fa-book",
     route: "/materi"
   },
   {
-    no: 5,
+    no: 4,
     nama: "Evaluasi",
     icon: "fa-pencil-ruler",
     route: "/evaluasi"
+  },
+  {
+    no: 5,
+    nama: "Kuesioner",
+    icon: "fa-question",
+    route: "/kuesioner"
   }
 ];
 
