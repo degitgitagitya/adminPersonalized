@@ -10,11 +10,16 @@ import NavLink from "../Components/NavLink";
 import "./Home.css";
 
 const TableKelas = props => {
-  const { no, nama } = props;
+  const { no, nama, id } = props;
   return (
     <tr>
       <td>{no}</td>
       <td>{nama}</td>
+      <td>
+        <NavLink href={`/siswa?id_kelas=${id}&nama_kelas=${nama}`}>
+          <button className="action-button-view">View</button>
+        </NavLink>
+      </td>
     </tr>
   );
 };
@@ -280,6 +285,7 @@ export default class Home extends Component {
                     <tr>
                       <td>No</td>
                       <td>Nama Kelas</td>
+                      <td>Action</td>
                     </tr>
                   </thead>
                   <tbody>
@@ -289,6 +295,7 @@ export default class Home extends Component {
                           key={data.id}
                           no={index + 1}
                           nama={data.nama}
+                          id={data.id}
                         ></TableKelas>
                       );
                     })}

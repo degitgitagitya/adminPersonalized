@@ -49,16 +49,6 @@ export default class Kuesioner extends Component {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => {
-                    this.props.history.push(
-                      `/siswa?id_kelas=${row.original.id}&nama_kelas=${row.original.nama}`
-                    );
-                  }}
-                  className="action-button-view"
-                >
-                  View
-                </button>
               </div>
             )
           }

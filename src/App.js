@@ -12,6 +12,7 @@ import Materi from "./Pages/Materi";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 import NotFound from "./Pages/NotFound";
 import Kuesioner from "./Pages/Kuesioner";
+import SubMateri from "./Pages/SubMateri";
 
 export default class App extends Component {
   render() {
@@ -49,6 +50,11 @@ export default class App extends Component {
               exact
               path="/kuesioner"
               component={Kuesioner}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/submateri"
+              component={SubMateri}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>

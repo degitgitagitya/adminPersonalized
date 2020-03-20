@@ -6,26 +6,26 @@ import BreadCumbs from "../Components/BreadCumbs";
 import Container from "../Components/Container";
 import ReactTable from "../Components/ReactTable";
 
-import "./Materi.css";
+import "./SubMateri.css";
 
-export default class Materi extends Component {
+export default class SubMateri extends Component {
   state = {
     head: [
       {
-        Header: "Data Materi",
+        Header: "Data Kuesioner",
         columns: [
           {
             Header: "No",
             Cell: ({ row }) => <div>{row.index + 1}</div>
           },
           {
-            Header: "Indikator",
-            accessor: "indikator",
+            Header: "Nama",
+            accessor: "nama",
             sortType: "basic"
           },
           {
-            Header: "Judul",
-            accessor: "judul",
+            Header: "Gaya Belajar",
+            accessor: "id_gaya_belajar",
             sortType: "basic"
           },
           {
@@ -34,8 +34,8 @@ export default class Materi extends Component {
             sortType: "basic"
           },
           {
-            Header: "Tujuan Belajar",
-            accessor: "tujuan_belajar",
+            Header: "Url",
+            accessor: "url",
             sortType: "basic"
           },
           {
@@ -59,16 +59,6 @@ export default class Materi extends Component {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => {
-                    this.props.history.push(
-                      `/submateri?id_materi=${row.original.id}&judul=${row.original.judul}`
-                    );
-                  }}
-                  className="action-button-view"
-                >
-                  View
-                </button>
               </div>
             )
           }
@@ -78,22 +68,25 @@ export default class Materi extends Component {
     body: [],
     showModal: false,
     edit: false,
-    inputIndikator: "",
-    inputJudul: "",
+    idMateri: "",
+    idSubMateri: "",
+    judulMateri: "",
+    idGaya: "",
+    inputNama: "",
+    inputGaya: "",
     inputKeterangan: "",
-    inputTujuan: "",
-    idKuesioner: ""
+    inputUrl: ""
   };
 
-  onChangeIndikator = event => {
+  onChangeNama = event => {
     this.setState({
-      inputIndikator: event.target.value
+      inputNama: event.target.value
     });
   };
 
-  onChangeJudul = event => {
+  onChangeGaya = event => {
     this.setState({
-      inputJudul: event.target.value
+      inputGaya: event.target.value
     });
   };
 
@@ -103,22 +96,41 @@ export default class Materi extends Component {
     });
   };
 
-  onChangeTujuan = event => {
+  onChangeUrl = event => {
     this.setState({
-      inputTujuan: event.target.value
+      inputUrl: event.target.value
     });
   };
 
-  fetchDataMateri = () => {
-    var requestOptions = {
+  onChangeFilterGaya = event => {
+    this.setState({
+      idGaya: event.target.value
+    });
+  };
+
+  fetchDataSubMateri = () => {
+    const requestOptions = {
       method: "GET",
       redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:5000/materi", requestOptions)
+    const search = this.props.location.search;
+    const params = new URLSearchParams(search);
+    const idMateri = params.get("id_materi");
+    const judul = params.get("judul");
+
+    let url = `http://127.0.0.1:5000/submateri/${idMateri}`;
+
+    if (this.state.idGaya !== "") {
+      url = `http://127.0.0.1:5000/submateri/${idMateri}/${this.state.idGaya}`;
+    }
+
+    fetch(url, requestOptions)
       .then(response => response.json())
       .then(result => {
         this.setState({
+          idMateri: idMateri,
+          judulMateri: judul,
           body: result
         });
       })
@@ -130,10 +142,11 @@ export default class Materi extends Component {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      judul: this.state.inputJudul,
+      id_gaya_belajar: this.state.inputGaya,
+      id_materi: this.state.idMateri,
+      nama: this.state.inputNama,
       keterangan: this.state.inputKeterangan,
-      indikator: this.state.inputIndikator,
-      tujuan_belajar: this.state.inputTujuan
+      url: this.state.inputUrl
     });
 
     const requestOptions = {
@@ -143,10 +156,10 @@ export default class Materi extends Component {
       redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:5000/materi", requestOptions)
+    fetch("http://127.0.0.1:5000/submateri", requestOptions)
       .then(response => response.json())
       .then(result => {
-        this.fetchDataMateri();
+        this.fetchDataSubMateri();
         this.handleCloseModal();
       })
       .catch(error => console.log("error", error));
@@ -158,23 +171,28 @@ export default class Materi extends Component {
       redirect: "follow"
     };
 
-    fetch(`http://127.0.0.1:5000/materi/${id}`, requestOptions)
+    fetch(`http://127.0.0.1:5000/submateri/${id}`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        this.fetchDataMateri();
+        this.fetchDataSubMateri();
       })
       .catch(error => console.log("error", error));
   };
 
-  updateMateri = () => {
+  handleOpenModalAdd = () => {
+    this.setState({ showModal: true, edit: false });
+  };
+
+  updateSubMateri = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      judul: this.state.inputJudul,
+      id_gaya_belajar: this.state.inputGaya,
+      id_materi: this.state.idMateri,
       keterangan: this.state.inputKeterangan,
-      indikator: this.state.inputIndikator,
-      tujuan_belajar: this.state.inputTujuan
+      nama: this.state.inputNama,
+      url: this.state.inputUrl
     });
 
     const requestOptions = {
@@ -185,12 +203,12 @@ export default class Materi extends Component {
     };
 
     fetch(
-      `http://127.0.0.1:5000/materi/${this.state.idKuesioner}`,
+      `http://127.0.0.1:5000/submateri/${this.state.idSubMateri}`,
       requestOptions
     )
-      .then(response => response.text())
+      .then(response => response.json())
       .then(result => {
-        this.fetchDataMateri();
+        this.fetchDataSubMateri();
         this.handleCloseModal();
       })
       .catch(error => console.log("error", error));
@@ -200,37 +218,33 @@ export default class Materi extends Component {
     this.setState({
       showModal: true,
       edit: true,
-      idKuesioner: data.id,
-      inputIndikator: data.indikator,
-      inputJudul: data.judul,
+      idSubMateri: data.id,
+      inputNama: data.nama,
+      inputGaya: data.id_gaya_belajar,
       inputKeterangan: data.keterangan,
-      inputTujuan: data.tujuan_belajar
+      inputUrl: data.url
     });
-  };
-
-  handleOpenModalAdd = () => {
-    this.setState({ showModal: true, edit: false });
   };
 
   handleCloseModal = () => {
     this.setState({
       showModal: false,
-      inputIndikator: "",
-      inputJudul: "",
+      inputNama: "",
+      inputGaya: "",
       inputKeterangan: "",
-      inputTujuan: ""
+      inputUrl: ""
     });
   };
 
   componentDidMount() {
-    this.fetchDataMateri();
+    this.fetchDataSubMateri();
   }
 
   render() {
     return (
       <div>
         <SideBar />
-        <BreadCumbs content="/Materi" />
+        <BreadCumbs content="/Materi/Sub Materi" />
         <Container>
           <div className="page-box">
             <div className="page-button-container">
@@ -249,25 +263,30 @@ export default class Materi extends Component {
                 className="modal-custom"
                 overlayClassName="modal-overlay-custom"
               >
-                <h5>Tambah Kelas</h5>
+                <h5>Tambah Sub Materi</h5>
 
-                <label htmlFor="indikator">Indikator</label>
+                <label htmlFor="nama">Nama Sub Materi</label>
                 <input
-                  value={this.state.inputIndikator}
-                  onChange={this.onChangeIndikator}
+                  value={this.state.inputNama}
+                  onChange={this.onChangeNama}
                   type="text"
                   className="form-control mb-3"
-                  id="indikator"
+                  id="nama"
                 />
 
-                <label htmlFor="judul">Judul</label>
-                <input
-                  value={this.state.inputJudul}
-                  onChange={this.onChangeJudul}
-                  type="text"
+                <label htmlFor="gaya">Gaya Belajar</label>
+                <select
+                  onChange={this.onChangeGaya}
+                  value={this.inputGaya}
+                  name="gaya"
                   className="form-control mb-3"
-                  id="judul"
-                />
+                  id="gaya"
+                >
+                  <option value="1">Activist</option>
+                  <option value="2">Reflector</option>
+                  <option value="3">Theorist</option>
+                  <option value="4">Pragmatist</option>
+                </select>
 
                 <label htmlFor="keterangan">Keterangan</label>
                 <input
@@ -278,18 +297,19 @@ export default class Materi extends Component {
                   id="keterangan"
                 />
 
-                <label htmlFor="tujuan">Tujuan Belajar</label>
+                <label htmlFor="url">Url Video Materi</label>
                 <input
-                  value={this.state.inputTujuan}
-                  onChange={this.onChangeTujuan}
+                  value={this.state.inputUrl}
+                  onChange={this.onChangeUrl}
                   type="text"
                   className="form-control mb-3"
-                  id="tujuan"
+                  id="url"
                 />
+
                 {this.state.edit ? (
                   <button
                     className="btn btn-success mr-3"
-                    onClick={this.updateMateri}
+                    onClick={this.updateSubMateri}
                   >
                     Edit
                   </button>
@@ -309,6 +329,37 @@ export default class Materi extends Component {
                 </button>
               </ReactModal>
             </div>
+            <div className="row">
+              <div className="col-md-3">
+                <label htmlFor="gaya">Lihat Berdasarkan Gaya Belajar</label>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-3">
+                <select
+                  onChange={this.onChangeFilterGaya}
+                  value={this.idGaya}
+                  name="gaya"
+                  className="form-control mb-3"
+                  id="gaya"
+                >
+                  <option value="">Lihat Semua</option>
+                  <option value="1">Activist</option>
+                  <option value="2">Reflector</option>
+                  <option value="3">Theorist</option>
+                  <option value="4">Pragmatist</option>
+                </select>
+              </div>
+              <div className="col-md-3">
+                <button
+                  className="btn btn-success"
+                  onClick={this.fetchDataSubMateri}
+                >
+                  Pilih
+                </button>
+              </div>
+            </div>
+            <h3>Materi {this.state.judulMateri}</h3>
             <ReactTable
               head={this.state.head}
               body={this.state.body}

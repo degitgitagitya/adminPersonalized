@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import { AuthContext } from "../Contexts/Authentication";
 import NavLink from "./NavLink";
 
 import "./SideBar.css";
@@ -49,6 +50,8 @@ const MenuContent = props => {
 };
 
 export default class SideBar extends Component {
+  static contextType = AuthContext;
+
   render() {
     return (
       <div className="sidebar-container">
@@ -61,12 +64,14 @@ export default class SideBar extends Component {
             </div>
             <div className="col-9">
               <div className="row">
-                <div className="col-12 sidebar-user-name">Detya</div>
+                <div className="col-12 sidebar-user-name">
+                  {this.context.data.nama}
+                </div>
               </div>
               <div className="row">
                 <div className="col-12 sidebar-user-status">
                   <i className="fas fa-circle sidebar-user-status-icon"></i>
-                  Online
+                  {this.context.data.mata_pelajaran}
                 </div>
               </div>
             </div>
