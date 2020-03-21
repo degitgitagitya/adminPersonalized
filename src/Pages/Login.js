@@ -62,7 +62,7 @@ class Login extends Component {
       .then(response => response.json())
       .then(data => {
         if (Object.entries(data).length === 0 && data.constructor === Object) {
-          this.toggleError("Wrong Username / Password");
+          this.toggleError("Wrong Email / Password");
         } else {
           this.context.changeAuthToTrue(data);
           this.props.history.push("/home");
@@ -119,7 +119,7 @@ class Login extends Component {
                     if (this.checkInput() === true) {
                       this.handleClickLogin(this.props);
                     } else {
-                      this.toggleError("Fill Username & Password");
+                      this.toggleError("Fill Email & Password");
                     }
                   }}
                   className="btn btn-info form-control mt-2 mb-3"
