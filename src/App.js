@@ -14,6 +14,7 @@ import NotFound from "./Pages/NotFound";
 import Kuesioner from "./Pages/Kuesioner";
 import SubMateri from "./Pages/SubMateri";
 import BankSoal from "./Pages/BankSoal";
+import Soal from "./Pages/Soal";
 
 export default class App extends Component {
   render() {
@@ -61,6 +62,11 @@ export default class App extends Component {
               exact
               path="/banksoal"
               component={BankSoal}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/soal"
+              component={Soal}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>

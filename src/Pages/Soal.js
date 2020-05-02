@@ -6,20 +6,19 @@ import BreadCumbs from "../Components/BreadCumbs";
 import Container from "../Components/Container";
 import ReactTable from "../Components/ReactTable";
 
-export default class BankSoal extends Component {
+export default class Soal extends Component {
   state = {
-    listBankSoal: [],
     head: [
       {
-        Header: "Data Bank Soal",
+        Header: "Data Soal",
         columns: [
           {
             Header: "No",
             Cell: ({ row }) => <div>{row.index + 1}</div>,
           },
           {
-            Header: "Nama Bank Soal",
-            accessor: "nama",
+            Header: "Pertanyaan",
+            accessor: "pertanyaan",
             sortType: "basic",
           },
           {
@@ -45,7 +44,9 @@ export default class BankSoal extends Component {
                 </button>
                 <button
                   onClick={() => {
-                    this.props.history.push(`/soal?x=${row.original.id}`);
+                    this.props.history.push(
+                      `/siswa?id_kelas=${row.original.id}&nama_kelas=${row.original.nama}`
+                    );
                   }}
                   className="action-button-view"
                 >
@@ -57,44 +58,48 @@ export default class BankSoal extends Component {
         ],
       },
     ],
-    inputNama: "",
+    body: [],
+    inputPertanyaan: "",
+    idPertanyaan: "",
     idBankSoal: "",
-    showModal: false,
   };
 
-  onChangeNama = (event) => {
+  onChangePertanyaan = (event) => {
     this.setState({
-      inputNama: event.target.value,
+      inputPertanyaan: event.target.value,
     });
   };
 
-  fetchBankSoal = () => {
+  fetchSoal = () => {
+    const search = this.props.location.search;
+    const params = new URLSearchParams(search);
+    const id = params.get("x");
+
     const requestOptions = {
       method: "GET",
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/bank-soal`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/soal/${id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         this.setState({
-          inputNama: "",
-          listBankSoal: result,
+          idBankSoal: id,
+          inputPertanyaan: "",
+          body: result,
         });
       })
       .catch((error) => console.log("error", error));
   };
 
-  componentDidMount() {
-    this.fetchBankSoal();
-  }
-
   handleAddButton = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({ nama: this.state.inputNama });
+    const raw = JSON.stringify({
+      id_bank_soal: this.state.idBankSoal,
+      pertanyaan: this.state.inputPertanyaan,
+    });
 
     const requestOptions = {
       method: "POST",
@@ -103,10 +108,10 @@ export default class BankSoal extends Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/bank-soal`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/soal`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        this.fetchBankSoal();
+        this.fetchSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -115,7 +120,10 @@ export default class BankSoal extends Component {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({ nama: this.state.inputNama });
+    const raw = JSON.stringify({
+      id_bank_soal: this.state.idBankSoal,
+      pertanyaan: this.state.inputPertanyaan,
+    });
 
     const requestOptions = {
       method: "PUT",
@@ -125,12 +133,12 @@ export default class BankSoal extends Component {
     };
 
     fetch(
-      `${process.env.REACT_APP_API_URL}/bank-soal/${this.state.idBankSoal}`,
+      `${process.env.REACT_APP_API_URL}/soal/${this.state.idPertanyaan}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        this.fetchBankSoal();
+        this.fetchSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -141,10 +149,10 @@ export default class BankSoal extends Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/bank-soal/${id}`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/soal/${id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        this.fetchBankSoal();
+        this.fetchSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -154,17 +162,21 @@ export default class BankSoal extends Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ showModal: false, inputNama: "" });
+    this.setState({ showModal: false, inputPertanyaan: "" });
   };
 
   handleClickEdit = (data) => {
     this.setState({
-      inputNama: data.nama,
+      inputPertanyaan: data.pertanyaan,
       showModal: true,
       edit: true,
-      idBankSoal: data.id,
+      idPertanyaan: data.id,
     });
   };
+
+  componentDidMount() {
+    this.fetchSoal();
+  }
 
   render() {
     return (
@@ -174,16 +186,15 @@ export default class BankSoal extends Component {
           className="modal-custom"
           overlayClassName="modal-overlay-custom"
         >
-          <h5>Tambah Bank Soal</h5>
+          <h5>Tambah Pertanyaan</h5>
 
-          <label htmlFor="nama">Nama Bank Soal</label>
+          <div>Pertanyaan</div>
           <input
-            value={this.state.inputNama}
-            onChange={this.onChangeNama}
+            value={this.state.inputPertanyaan}
+            onChange={this.onChangePertanyaan}
             type="text"
             className="form-control mb-3"
-            id="nama"
-            placeholder="Nama Bank Soal"
+            placeholder="Pertanyaan"
           />
           {this.state.edit ? (
             <button
@@ -211,7 +222,7 @@ export default class BankSoal extends Component {
           </button>
         </ReactModal>
         <SideBar />
-        <BreadCumbs content="/Bank Soal" />
+        <BreadCumbs content="/Soal" />
         <Container>
           <div className="page-box">
             <div className="d-flex mb-3">
@@ -227,7 +238,7 @@ export default class BankSoal extends Component {
             </div>
             <ReactTable
               head={this.state.head}
-              body={this.state.listBankSoal}
+              body={this.state.body}
             ></ReactTable>
           </div>
         </Container>
