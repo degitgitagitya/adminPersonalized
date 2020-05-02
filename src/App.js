@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./Components/ProtectedRoute";
 import NotFound from "./Pages/NotFound";
 import Kuesioner from "./Pages/Kuesioner";
 import SubMateri from "./Pages/SubMateri";
+import BankSoal from "./Pages/BankSoal";
 
 export default class App extends Component {
   render() {
@@ -55,6 +56,11 @@ export default class App extends Component {
               exact
               path="/submateri"
               component={SubMateri}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/banksoal"
+              component={BankSoal}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>

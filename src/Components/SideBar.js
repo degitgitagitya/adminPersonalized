@@ -10,35 +10,41 @@ const DATA_MENU = [
     no: 1,
     nama: "Beranda",
     icon: "fa-home",
-    route: "/home"
+    route: "/home",
   },
   {
     no: 2,
     nama: "Kelas",
     icon: "fa-chalkboard",
-    route: "/kelas"
+    route: "/kelas",
   },
   {
     no: 3,
     nama: "Materi",
     icon: "fa-book",
-    route: "/materi"
+    route: "/materi",
   },
   {
     no: 4,
-    nama: "Evaluasi",
-    icon: "fa-pencil-ruler",
-    route: "/evaluasi"
+    nama: "Bank Soal",
+    icon: "fa-file-alt",
+    route: "/banksoal",
   },
   {
     no: 5,
+    nama: "Evaluasi",
+    icon: "fa-pencil-ruler",
+    route: "/evaluasi",
+  },
+  {
+    no: 6,
     nama: "Kuesioner",
     icon: "fa-question",
-    route: "/kuesioner"
-  }
+    route: "/kuesioner",
+  },
 ];
 
-const MenuContent = props => {
+const MenuContent = (props) => {
   return (
     <NavLink href={props.data.route}>
       <div className="sidebar-content">
@@ -78,7 +84,7 @@ export default class SideBar extends Component {
           </div>
         </div>
         <hr className="sidebar-line" />
-        {DATA_MENU.map(data => {
+        {DATA_MENU.map((data) => {
           return <MenuContent key={data.no} data={data}></MenuContent>;
         })}
         <hr className="sidebar-line" />
