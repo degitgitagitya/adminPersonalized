@@ -15,6 +15,7 @@ import Kuesioner from "./Pages/Kuesioner";
 import SubMateri from "./Pages/SubMateri";
 import BankSoal from "./Pages/BankSoal";
 import Soal from "./Pages/Soal";
+import PilihanSoal from "./Pages/PilihanSoal";
 
 export default class App extends Component {
   render() {
@@ -67,6 +68,11 @@ export default class App extends Component {
               exact
               path="/soal"
               component={Soal}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/pilihansoal"
+              component={PilihanSoal}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>

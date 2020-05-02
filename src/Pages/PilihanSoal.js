@@ -6,20 +6,28 @@ import BreadCumbs from "../Components/BreadCumbs";
 import Container from "../Components/Container";
 import ReactTable from "../Components/ReactTable";
 
-export default class Soal extends Component {
+export default class PilihanSoal extends Component {
   state = {
     head: [
       {
-        Header: "Data Soal",
+        Header: "Data Pilihan Soal",
         columns: [
           {
             Header: "No",
             Cell: ({ row }) => <div>{row.index + 1}</div>,
           },
           {
-            Header: "Pertanyaan",
-            accessor: "pertanyaan",
+            Header: "Pilihan",
+            accessor: "pilihan",
             sortType: "basic",
+          },
+          {
+            Header: "Status",
+            accessor: "is_right",
+            sortType: "basic",
+            Cell: ({ row }) => (
+              <div>{row.original.is_right === 1 ? "Benar" : "Salah"}</div>
+            ),
           },
           {
             Header: "Action",
@@ -42,16 +50,6 @@ export default class Soal extends Component {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => {
-                    this.props.history.push(
-                      `/pilihansoal?x=${row.original.id}&y=${row.original.pertanyaan}`
-                    );
-                  }}
-                  className="action-button-view"
-                >
-                  View
-                </button>
               </div>
             ),
           },
@@ -59,34 +57,45 @@ export default class Soal extends Component {
       },
     ],
     body: [],
-    inputPertanyaan: "",
     idPertanyaan: "",
-    idBankSoal: "",
+    pertanyaan: "",
+    idPilihan: "",
+    inputPilihan: "",
+    inputStatus: 0,
+    showModal: false,
   };
 
-  onChangePertanyaan = (event) => {
+  onChangePilihan = (event) => {
     this.setState({
-      inputPertanyaan: event.target.value,
+      inputPilihan: event.target.value,
     });
   };
 
-  fetchSoal = () => {
+  onChangeStatus = (event) => {
+    this.setState({
+      inputStatus: event.target.value,
+    });
+  };
+
+  fetchPilihanSoal = () => {
     const search = this.props.location.search;
     const params = new URLSearchParams(search);
     const id = params.get("x");
+    const pertanyaan = params.get("y");
 
     const requestOptions = {
       method: "GET",
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/soal/${id}`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/pilihan-soal/${id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         this.setState({
-          idBankSoal: id,
-          inputPertanyaan: "",
           body: result,
+          idPertanyaan: id,
+          pertanyaan: pertanyaan,
         });
       })
       .catch((error) => console.log("error", error));
@@ -97,8 +106,9 @@ export default class Soal extends Component {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      id_bank_soal: this.state.idBankSoal,
-      pertanyaan: this.state.inputPertanyaan,
+      id_soal: this.state.idPertanyaan,
+      pilihan: this.state.inputPilihan,
+      is_right: this.state.inputStatus,
     });
 
     const requestOptions = {
@@ -108,10 +118,10 @@ export default class Soal extends Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/soal`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/pilihan-soal`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        this.fetchSoal();
+        this.fetchPilihanSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -121,8 +131,9 @@ export default class Soal extends Component {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      id_bank_soal: this.state.idBankSoal,
-      pertanyaan: this.state.inputPertanyaan,
+      id_soal: this.state.idPertanyaan,
+      pilihan: this.state.inputPilihan,
+      is_right: this.state.inputStatus,
     });
 
     const requestOptions = {
@@ -133,12 +144,12 @@ export default class Soal extends Component {
     };
 
     fetch(
-      `${process.env.REACT_APP_API_URL}/soal/${this.state.idPertanyaan}`,
+      `${process.env.REACT_APP_API_URL}/pilihan-soal/${this.state.idPilihan}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        this.fetchSoal();
+        this.fetchPilihanSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -149,10 +160,10 @@ export default class Soal extends Component {
       redirect: "follow",
     };
 
-    fetch(`${process.env.REACT_APP_API_URL}/soal/${id}`, requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/pilihan-soal/${id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        this.fetchSoal();
+        this.fetchPilihanSoal();
       })
       .catch((error) => console.log("error", error));
   };
@@ -162,20 +173,21 @@ export default class Soal extends Component {
   };
 
   handleCloseModal = () => {
-    this.setState({ showModal: false, inputPertanyaan: "" });
+    this.setState({ showModal: false, inputPilihan: "", inputStatus: 0 });
   };
 
   handleClickEdit = (data) => {
     this.setState({
-      inputPertanyaan: data.pertanyaan,
+      inputPilihan: data.pilihan,
       showModal: true,
       edit: true,
-      idPertanyaan: data.id,
+      idPilihan: data.id,
+      inputStatus: data.is_right,
     });
   };
 
   componentDidMount() {
-    this.fetchSoal();
+    this.fetchPilihanSoal();
   }
 
   render() {
@@ -186,16 +198,29 @@ export default class Soal extends Component {
           className="modal-custom"
           overlayClassName="modal-overlay-custom"
         >
-          <h5>Tambah Pertanyaan</h5>
+          <h5>Tambah Pilihan</h5>
 
-          <div>Pertanyaan</div>
+          <div>Pilihan</div>
           <input
-            value={this.state.inputPertanyaan}
-            onChange={this.onChangePertanyaan}
+            value={this.state.inputPilihan}
+            onChange={this.onChangePilihan}
             type="text"
-            className="form-control mb-3"
-            placeholder="Pertanyaan"
+            className="form-control mb-2"
+            placeholder="Pilihan"
           />
+
+          <div>Status</div>
+          <select
+            value={this.state.inputStatus}
+            onChange={this.onChangeStatus}
+            name="status"
+            className="form-control w-25 mb-4"
+            id="status"
+          >
+            <option value="0">Salah</option>
+            <option value="1">Benar</option>
+          </select>
+
           {this.state.edit ? (
             <button
               className="btn btn-success mr-3"
@@ -222,7 +247,7 @@ export default class Soal extends Component {
           </button>
         </ReactModal>
         <SideBar />
-        <BreadCumbs content="/Soal" />
+        <BreadCumbs content="/Pilihan Soal" />
         <Container>
           <div className="page-box">
             <div className="d-flex mb-3">
@@ -235,6 +260,9 @@ export default class Soal extends Component {
                 </span>
                 Tambah
               </button>
+            </div>
+            <div className="d-flex mb-3">
+              <div>Pertanyaan : {this.state.pertanyaan}</div>
             </div>
             <ReactTable
               head={this.state.head}
