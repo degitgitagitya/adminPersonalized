@@ -42,6 +42,12 @@ const DATA_MENU = [
     icon: "fa-question",
     route: "/kuesioner",
   },
+  {
+    no: 7,
+    nama: "Media Code",
+    icon: "fa-code",
+    route: "/media-code",
+  },
 ];
 
 const MenuContent = (props) => {

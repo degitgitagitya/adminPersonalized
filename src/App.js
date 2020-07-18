@@ -16,6 +16,7 @@ import SubMateri from "./Pages/SubMateri";
 import BankSoal from "./Pages/BankSoal";
 import Soal from "./Pages/Soal";
 import PilihanSoal from "./Pages/PilihanSoal";
+import MediaCode from "./Pages/MediaCode";
 
 export default class App extends Component {
   render() {
@@ -73,6 +74,11 @@ export default class App extends Component {
               exact
               path="/pilihansoal"
               component={PilihanSoal}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/media-code"
+              component={MediaCode}
             ></ProtectedRoute>
             <Route path="*" component={() => <NotFound />} />
           </Switch>
