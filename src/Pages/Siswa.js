@@ -1,53 +1,53 @@
-import React, { Component } from "react";
-import ReactModal from "react-modal";
+import React, { Component } from 'react';
+import ReactModal from 'react-modal';
 
-import SideBar from "../Components/SideBar";
-import BreadCumbs from "../Components/BreadCumbs";
-import Container from "../Components/Container";
-import ReactTable from "../Components/ReactTable";
+import SideBar from '../Components/SideBar';
+import BreadCumbs from '../Components/BreadCumbs';
+import Container from '../Components/Container';
+import ReactTable from '../Components/ReactTable';
 
-import "./Siswa.css";
+import './Siswa.css';
 
 export default class Siswa extends Component {
   state = {
     head: [
       {
-        Header: "Data Siswa",
+        Header: 'Data Siswa',
         columns: [
           {
-            Header: "No",
-            Cell: ({ row }) => <div>{row.index + 1}</div>
+            Header: 'No',
+            Cell: ({ row }) => <div>{row.index + 1}</div>,
           },
           {
-            Header: "Nama Siswa",
-            accessor: "nama",
-            sortType: "basic"
+            Header: 'Nama Siswa',
+            accessor: 'nama',
+            sortType: 'basic',
           },
           {
-            Header: "Email",
-            accessor: "email",
-            sortType: "basic"
+            Header: 'Email',
+            accessor: 'email',
+            sortType: 'basic',
           },
           {
-            Header: "Gaya Belajar",
-            accessor: "id_gaya_belajar",
-            sortType: "basic"
+            Header: 'Gaya Belajar',
+            accessor: 'id_gaya_belajar',
+            sortType: 'basic',
           },
           {
-            Header: "Password",
-            accessor: "password",
-            sortType: "basic"
+            Header: 'Password',
+            accessor: 'password',
+            sortType: 'basic',
           },
           {
-            Header: "Action",
-            accessor: "id",
+            Header: 'Action',
+            accessor: 'id',
             Cell: ({ row }) => (
               <div>
                 <button
                   onClick={() => {
                     this.onClickDelete(row.original.id);
                   }}
-                  className="action-button-delete"
+                  className='action-button-delete'
                 >
                   Delete
                 </button>
@@ -55,160 +55,163 @@ export default class Siswa extends Component {
                   onClick={() => {
                     this.handleOpenModalEdit(row.original);
                   }}
-                  className="action-button-edit"
+                  className='action-button-edit'
                 >
                   Edit
                 </button>
-                <button className="action-button-view">View</button>
+                <button className='action-button-view'>View</button>
               </div>
-            )
-          }
-        ]
-      }
+            ),
+          },
+        ],
+      },
     ],
     body: [],
     showModal: false,
     edit: false,
-    inputNama: "",
-    inputEmail: "",
-    inputGaya: "",
-    inputPassword: "",
-    inputKonfirmasi: "",
-    idSiswa: "",
-    idKelas: "",
-    namaKelas: "",
-    jumlahSiswa: ""
+    inputNama: '',
+    inputEmail: '',
+    inputGaya: '',
+    inputPassword: '',
+    inputKonfirmasi: '',
+    idSiswa: '',
+    idKelas: '',
+    namaKelas: '',
+    jumlahSiswa: '',
   };
 
-  onChangeNama = event => {
+  onChangeNama = (event) => {
     this.setState({
-      inputNama: event.target.value
+      inputNama: event.target.value,
     });
   };
 
-  onChangeEmail = event => {
+  onChangeEmail = (event) => {
     this.setState({
-      inputEmail: event.target.value
+      inputEmail: event.target.value,
     });
   };
 
-  onChangeGaya = event => {
+  onChangeGaya = (event) => {
     this.setState({
-      inputGaya: event.target.value
+      inputGaya: event.target.value,
     });
   };
 
-  onChangePassword = event => {
+  onChangePassword = (event) => {
     this.setState({
-      inputPassword: event.target.value
+      inputPassword: event.target.value,
     });
   };
 
-  onChangeKonfirmasi = event => {
+  onChangeKonfirmasi = (event) => {
     this.setState({
-      inputKonfirmasi: event.target.value
+      inputKonfirmasi: event.target.value,
     });
   };
 
-  onClickDelete = id => {
+  onClickDelete = (id) => {
     const requestOptions = {
-      method: "DELETE",
-      redirect: "follow"
+      method: 'DELETE',
+      redirect: 'follow',
     };
 
-    fetch(`http://127.0.0.1:5000/siswa/${id}`, requestOptions)
-      .then(response => response.json())
-      .then(result => {
+    fetch(`${process.env.REACT_APP_API_URL}/siswa/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
         this.fetchDataSiswaByKelas();
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   fetchDataSiswaByKelas = () => {
     const requestOptions = {
-      method: "GET",
-      redirect: "follow"
+      method: 'GET',
+      redirect: 'follow',
     };
 
     const search = this.props.location.search;
     const params = new URLSearchParams(search);
-    const id = params.get("id_kelas");
-    const nama = params.get("nama_kelas");
+    const id = params.get('id_kelas');
+    const nama = params.get('nama_kelas');
 
-    fetch(`http://127.0.0.1:5000/siswas/${id}`, requestOptions)
-      .then(response => response.json())
-      .then(result => {
+    fetch(`${process.env.REACT_APP_API_URL}/siswas/${id}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
         this.setState({
           body: result,
           idKelas: id,
           namaKelas: nama,
-          jumlahSiswa: result.length
+          jumlahSiswa: result.length,
         });
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleAddButton = () => {
     const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Content-Type', 'application/json');
 
     const raw = JSON.stringify({
       email: this.state.inputEmail,
       id_gaya_belajar: this.state.inputGaya,
       id_kelas: this.state.idKelas,
       nama: this.state.inputNama,
-      password: this.state.inputPassword
+      password: this.state.inputPassword,
     });
 
     const requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: 'follow',
     };
 
-    fetch("http://127.0.0.1:5000/siswa", requestOptions)
-      .then(response => response.json())
-      .then(result => {
+    fetch(`${process.env.REACT_APP_API_URL}/siswa`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
         this.fetchDataSiswaByKelas();
         this.handleCloseModal();
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleEditButton = () => {
     const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Content-Type', 'application/json');
 
     const raw = JSON.stringify({
       email: this.state.inputEmail,
       id_gaya_belajar: this.state.inputGaya,
       id_kelas: this.state.idKelas,
       nama: this.state.inputNama,
-      password: this.state.inputPassword
+      password: this.state.inputPassword,
     });
 
     const requestOptions = {
-      method: "PUT",
+      method: 'PUT',
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: 'follow',
     };
 
-    fetch(`http://127.0.0.1:5000/siswa/${this.state.idSiswa}`, requestOptions)
-      .then(response => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/siswa/${this.state.idSiswa}`,
+      requestOptions
+    )
+      .then((response) => {
         this.fetchDataSiswaByKelas();
         this.handleCloseModal();
       })
-      .then(result => console.log(result))
-      .catch(error => console.log("error", error));
+      .then((result) => console.log(result))
+      .catch((error) => console.log('error', error));
   };
 
   handleOpenModalAdd = () => {
     this.setState({ showModal: true, edit: false });
   };
 
-  handleOpenModalEdit = data => {
+  handleOpenModalEdit = (data) => {
     this.setState({
       showModal: true,
       edit: true,
@@ -218,18 +221,18 @@ export default class Siswa extends Component {
       inputPassword: data.password,
       inputKonfirmasi: data.password,
       idSiswa: data.id,
-      idKelas: data.id_kelas
+      idKelas: data.id_kelas,
     });
   };
 
   handleCloseModal = () => {
     this.setState({
       showModal: false,
-      inputNama: "",
-      inputEmail: "",
-      inputGaya: "",
-      inputPassword: "",
-      inputKonfirmasi: ""
+      inputNama: '',
+      inputEmail: '',
+      inputGaya: '',
+      inputPassword: '',
+      inputKonfirmasi: '',
     });
   };
 
@@ -241,13 +244,13 @@ export default class Siswa extends Component {
     return (
       <div>
         <SideBar />
-        <BreadCumbs content="/Siswa" />
+        <BreadCumbs content='/Siswa' />
         <Container>
-          <div className="page-box">
-            <div className="page-button-container">
+          <div className='page-box'>
+            <div className='page-button-container'>
               <button
                 onClick={this.handleOpenModalAdd}
-                className="btn btn-info"
+                className='btn btn-info'
               >
                 <span>
                   <i className={`fas fa-plus`}></i>
@@ -257,72 +260,72 @@ export default class Siswa extends Component {
 
               <ReactModal
                 isOpen={this.state.showModal}
-                className="modal-custom"
-                overlayClassName="modal-overlay-custom"
+                className='modal-custom'
+                overlayClassName='modal-overlay-custom'
               >
                 <h5>Tambah Siswa</h5>
 
-                <label htmlFor="nama">Nama Siswa</label>
+                <label htmlFor='nama'>Nama Siswa</label>
                 <input
                   value={this.state.inputNama}
                   onChange={this.onChangeNama}
-                  type="text"
-                  className="form-control mb-2"
-                  id="nama"
+                  type='text'
+                  className='form-control mb-2'
+                  id='nama'
                 />
 
-                <label htmlFor="email">Email Siswa</label>
+                <label htmlFor='email'>Email Siswa</label>
                 <input
                   value={this.state.inputEmail}
                   onChange={this.onChangeEmail}
-                  type="text"
-                  className="form-control mb-2"
-                  id="email"
+                  type='text'
+                  className='form-control mb-2'
+                  id='email'
                 />
 
-                <label htmlFor="gaya">Gaya Belajar</label>
+                <label htmlFor='gaya'>Gaya Belajar</label>
                 <input
                   value={this.state.inputGaya}
                   onChange={this.onChangeGaya}
-                  type="text"
-                  className="form-control mb-2"
-                  id="gaya"
+                  type='text'
+                  className='form-control mb-2'
+                  id='gaya'
                 />
 
-                <label htmlFor="password">Password</label>
+                <label htmlFor='password'>Password</label>
                 <input
                   value={this.state.inputPassword}
                   onChange={this.onChangePassword}
-                  type="password"
-                  className="form-control mb-2"
-                  id="password"
+                  type='password'
+                  className='form-control mb-2'
+                  id='password'
                 />
 
-                <label htmlFor="konfirmasi">Konfirmasi Password</label>
+                <label htmlFor='konfirmasi'>Konfirmasi Password</label>
                 <input
                   value={this.state.inputKonfirmasi}
                   onChange={this.onChangeKonfirmasi}
-                  type="password"
-                  className="form-control mb-3"
-                  id="konfirmasi"
+                  type='password'
+                  className='form-control mb-3'
+                  id='konfirmasi'
                 />
                 {this.state.inputPassword === this.state.inputKonfirmasi ? (
-                  ""
+                  ''
                 ) : (
-                  <p className="text-danger">
+                  <p className='text-danger'>
                     Password dan Konfirmasi Password Tidak Sama
                   </p>
                 )}
                 {this.state.edit ? (
                   <button
-                    className="btn btn-success mr-3"
+                    className='btn btn-success mr-3'
                     onClick={this.handleEditButton}
                   >
                     Edit
                   </button>
                 ) : (
                   <button
-                    className="btn btn-info mr-3"
+                    className='btn btn-info mr-3'
                     onClick={this.handleAddButton}
                   >
                     Tambah
@@ -330,7 +333,7 @@ export default class Siswa extends Component {
                 )}
 
                 <button
-                  className="btn btn-warning"
+                  className='btn btn-warning'
                   onClick={this.handleCloseModal}
                 >
                   Cancel

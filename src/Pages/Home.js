@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import { Modal } from "react-bootstrap";
+import React, { Component } from 'react';
+import { Modal } from 'react-bootstrap';
 
-import { AuthContext } from "../Contexts/Authentication";
-import SideBar from "../Components/SideBar";
-import BreadCumbs from "../Components/BreadCumbs";
-import Container from "../Components/Container";
-import NavLink from "../Components/NavLink";
+import { AuthContext } from '../Contexts/Authentication';
+import SideBar from '../Components/SideBar';
+import BreadCumbs from '../Components/BreadCumbs';
+import Container from '../Components/Container';
+import NavLink from '../Components/NavLink';
 
-import "./Home.css";
+import './Home.css';
 
-const TableKelas = props => {
+const TableKelas = (props) => {
   const { no, nama, id } = props;
   return (
     <tr>
@@ -17,7 +17,7 @@ const TableKelas = props => {
       <td>{nama}</td>
       <td>
         <NavLink href={`/siswa?id_kelas=${id}&nama_kelas=${nama}`}>
-          <button className="action-button-view">View</button>
+          <button className='action-button-view'>View</button>
         </NavLink>
       </td>
     </tr>
@@ -26,11 +26,11 @@ const TableKelas = props => {
 
 class ModalEnd extends Component {
   state = {
-    id: "",
-    inputNama: "",
-    inputEmail: "",
-    inputMataPelajaran: "",
-    password: ""
+    id: '',
+    inputNama: '',
+    inputEmail: '',
+    inputMataPelajaran: '',
+    password: '',
   };
 
   changeAllState = (id, nama, email, mataPelajaran, password) => {
@@ -39,94 +39,97 @@ class ModalEnd extends Component {
       inputNama: nama,
       inputEmail: email,
       inputMataPelajaran: mataPelajaran,
-      password: password
+      password: password,
     });
   };
 
-  changeNama = event => {
+  changeNama = (event) => {
     this.setState({
-      inputNama: event.target.value
+      inputNama: event.target.value,
     });
   };
 
-  changeEmail = event => {
+  changeEmail = (event) => {
     this.setState({
-      inputEmail: event.target.value
+      inputEmail: event.target.value,
     });
   };
 
-  changeMataPelajaran = event => {
+  changeMataPelajaran = (event) => {
     this.setState({
-      inputMataPelajaran: event.target.value
+      inputMataPelajaran: event.target.value,
     });
   };
 
   handleClickEdit = () => {
     const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Content-Type', 'application/json');
 
     const raw = JSON.stringify({
       email: this.state.inputEmail,
       mata_pelajaran: this.state.inputMataPelajaran,
       password: this.state.password,
-      nama: this.state.inputNama
+      nama: this.state.inputNama,
     });
 
     const requestOptions = {
-      method: "PUT",
+      method: 'PUT',
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: 'follow',
     };
 
-    fetch(`http://127.0.0.1:5000/guru/${this.state.id}`, requestOptions)
-      .then(response => response.text())
-      .then(result => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/guru/${this.state.id}`,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
         this.props.onHide();
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   render() {
     return (
       <Modal
         {...this.props}
-        size="md"
-        aria-labelledby="contained-modal-title-vcenter"
+        size='md'
+        aria-labelledby='contained-modal-title-vcenter'
         centered
       >
-        <Modal.Header className="bg-secondary">
+        <Modal.Header className='bg-secondary'>
           <Modal.Title
-            className="text-light"
-            id="contained-modal-title-vcenter"
+            className='text-light'
+            id='contained-modal-title-vcenter'
           >
             Edit Profile
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <label htmlFor="nama">Nama</label>
+          <label htmlFor='nama'>Nama</label>
           <input
-            type="text"
-            id="nama"
-            className="form-control mb-2"
+            type='text'
+            id='nama'
+            className='form-control mb-2'
             value={this.state.inputNama}
             onChange={this.changeNama}
           />
 
-          <label htmlFor="email">Email</label>
+          <label htmlFor='email'>Email</label>
           <input
-            type="email"
-            id="email"
-            className="form-control mb-2"
+            type='email'
+            id='email'
+            className='form-control mb-2'
             value={this.state.inputEmail}
             onChange={this.changeEmail}
           />
 
-          <label htmlFor="mata-pelajaran">Mata Pelajaran</label>
+          <label htmlFor='mata-pelajaran'>Mata Pelajaran</label>
           <input
-            type="text"
-            id="mata-pelajaran"
-            className="form-control"
+            type='text'
+            id='mata-pelajaran'
+            className='form-control'
             value={this.state.inputMataPelajaran}
             onChange={this.changeMataPelajaran}
           />
@@ -134,13 +137,13 @@ class ModalEnd extends Component {
         <Modal.Footer>
           <button
             onClick={this.handleClickEdit}
-            className="btn btn-warning text-white"
+            className='btn btn-warning text-white'
           >
             Edit
           </button>
 
           <button
-            className="btn btn-danger"
+            className='btn btn-danger'
             onClick={() => {
               this.props.onHide();
             }}
@@ -165,9 +168,9 @@ export default class Home extends Component {
     daftarKelas: [],
     modalShow: false,
     setModalShow: false,
-    nama: "",
-    email: "",
-    pelajaran: ""
+    nama: '',
+    email: '',
+    pelajaran: '',
   };
 
   handleClickChangeChild = () => {
@@ -180,9 +183,9 @@ export default class Home extends Component {
     );
   };
 
-  setModalShow = x => {
+  setModalShow = (x) => {
     this.setState({
-      modalShow: x
+      modalShow: x,
     });
     if (x === false) {
       this.fetchGuru();
@@ -191,42 +194,45 @@ export default class Home extends Component {
 
   fetchGuru = () => {
     const requestOptions = {
-      method: "GET",
-      redirect: "follow"
+      method: 'GET',
+      redirect: 'follow',
     };
 
-    fetch(`http://127.0.0.1:5000/guru/${this.context.data.id}`, requestOptions)
-      .then(response => response.json())
-      .then(result => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/guru/${this.context.data.id}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
         this.setState({
           nama: result.nama,
           email: result.email,
-          pelajaran: result.mata_pelajaran
+          pelajaran: result.mata_pelajaran,
         });
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   fetchDaftarKelas = () => {
     const requestOptions = {
-      method: "GET",
-      redirect: "follow"
+      method: 'GET',
+      redirect: 'follow',
     };
 
     fetch(
-      `http://127.0.0.1:5000/kelases/${this.context.data.id}`,
+      `${process.env.REACT_APP_API_URL}/kelases/${this.context.data.id}`,
       requestOptions
     )
-      .then(response => response.json())
-      .then(result => {
+      .then((response) => response.json())
+      .then((result) => {
         this.setState({
           daftarKelas: result,
           nama: this.context.data.nama,
           email: this.context.data.email,
-          pelajaran: this.context.data.mata_pelajaran
+          pelajaran: this.context.data.mata_pelajaran,
         });
       })
-      .catch(error => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   componentDidMount() {
@@ -238,27 +244,27 @@ export default class Home extends Component {
     return (
       <div>
         <SideBar />
-        <BreadCumbs content="/Beranda" />
+        <BreadCumbs content='/Beranda' />
         <Container>
-          <div className="page-box">
-            <div className="row">
-              <div className="col-5">
-                <h3 className="home-nama text-center">{nama}</h3>
+          <div className='page-box'>
+            <div className='row'>
+              <div className='col-5'>
+                <h3 className='home-nama text-center'>{nama}</h3>
                 <hr />
-                <div className="row justify-content-center">
-                  <div className="col-6">
+                <div className='row justify-content-center'>
+                  <div className='col-6'>
                     <img
-                      src="https://ppmschool.ac.id/id/wp-content/uploads/2016/01/tutor-8.jpg"
-                      alt="profile"
-                      className="img-fluid home-image"
+                      src='https://ppmschool.ac.id/id/wp-content/uploads/2016/01/tutor-8.jpg'
+                      alt='profile'
+                      className='img-fluid home-image'
                     />
                   </div>
                 </div>
 
                 <hr />
-                <div className="text-center">
-                  <div className="home-detail">Email : {email}</div>
-                  <div className="home-detail">
+                <div className='text-center'>
+                  <div className='home-detail'>Email : {email}</div>
+                  <div className='home-detail'>
                     Mata Pelajaran : {pelajaran}
                   </div>
                 </div>
@@ -268,7 +274,7 @@ export default class Home extends Component {
                     this.setModalShow(true);
                     this.handleClickChangeChild();
                   }}
-                  className="btn btn-outline-warning form-control"
+                  className='btn btn-outline-warning form-control'
                 >
                   Edit
                 </button>
@@ -278,9 +284,9 @@ export default class Home extends Component {
                   onHide={() => this.setModalShow(false)}
                 />
               </div>
-              <div className="col-7">
-                <h3 className="text-center home-nama">Daftar Kelas</h3>
-                <table className="table">
+              <div className='col-7'>
+                <h3 className='text-center home-nama'>Daftar Kelas</h3>
+                <table className='table'>
                   <thead>
                     <tr>
                       <td>No</td>
@@ -302,8 +308,8 @@ export default class Home extends Component {
                   </tbody>
                 </table>
                 <hr />
-                <NavLink href="/kelas">
-                  <button className="btn btn-outline-info form-control">
+                <NavLink href='/kelas'>
+                  <button className='btn btn-outline-info form-control'>
                     Selengkapnya
                   </button>
                 </NavLink>
