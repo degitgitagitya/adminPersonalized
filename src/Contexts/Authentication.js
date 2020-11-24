@@ -4,7 +4,7 @@ export const AuthContext = createContext();
 
 export default class Authentication extends Component {
   state = {
-    isAuth: true,
+    isAuth: false,
     data: [],
   };
 

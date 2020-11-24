@@ -254,7 +254,7 @@ export default class Home extends Component {
                 <div className='row justify-content-center'>
                   <div className='col-6'>
                     <img
-                      src='https://ppmschool.ac.id/id/wp-content/uploads/2016/01/tutor-8.jpg'
+                      src='https://ik.imagekit.io/4cly7cecrazuh/Guru_Qts1dp34LzI.jpg'
                       alt='profile'
                       className='img-fluid home-image'
                     />

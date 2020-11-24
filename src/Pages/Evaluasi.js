@@ -1,38 +1,38 @@
-import React, { Component } from "react";
-import ReactModal from "react-modal";
+import React, { Component } from 'react';
+import ReactModal from 'react-modal';
 
-import SideBar from "../Components/SideBar";
-import BreadCumbs from "../Components/BreadCumbs";
-import Container from "../Components/Container";
-import ReactTable from "../Components/ReactTable";
+import SideBar from '../Components/SideBar';
+import BreadCumbs from '../Components/BreadCumbs';
+import Container from '../Components/Container';
+import ReactTable from '../Components/ReactTable';
 
-import "./Evaluasi.css";
+import './Evaluasi.css';
 
 export default class Evaluasi extends Component {
   state = {
     head: [
       {
-        Header: "Data Evaluasi",
+        Header: 'Data Evaluasi',
         columns: [
           {
-            Header: "No",
+            Header: 'No',
             Cell: ({ row }) => <div>{row.index + 1}</div>,
           },
           {
-            Header: "Nama Evaluasi",
-            accessor: "mata_pelajaran",
-            sortType: "basic",
+            Header: 'Nama Evaluasi',
+            accessor: 'mata_pelajaran',
+            sortType: 'basic',
           },
           {
-            Header: "Durasi",
-            accessor: "durasi",
-            sortType: "basic",
+            Header: 'Durasi',
+            accessor: 'durasi',
+            sortType: 'basic',
             Cell: ({ row }) => <div>{row.original.durasi} Menit</div>,
           },
           {
-            Header: "Bank Soal",
-            accessor: "id_bank_soal",
-            sortType: "basic",
+            Header: 'Bank Soal',
+            accessor: 'id_bank_soal',
+            sortType: 'basic',
             Cell: ({ row }) => (
               <div>
                 <button
@@ -41,7 +41,7 @@ export default class Evaluasi extends Component {
                       `/soal?x=${row.original.id_bank_soal}`
                     );
                   }}
-                  className="btn btn-info"
+                  className='btn btn-info'
                 >
                   Lihat Soal
                 </button>
@@ -49,15 +49,15 @@ export default class Evaluasi extends Component {
             ),
           },
           {
-            Header: "Action",
-            accessor: "id",
+            Header: 'Action',
+            accessor: 'id',
             Cell: ({ row }) => (
               <div>
                 <button
                   onClick={() => {
                     this.handleClickDelete(row.original.id);
                   }}
-                  className="action-button-delete"
+                  className='action-button-delete'
                 >
                   Delete
                 </button>
@@ -65,7 +65,7 @@ export default class Evaluasi extends Component {
                   onClick={() => {
                     this.handleClickEdit(row.original);
                   }}
-                  className="action-button-edit"
+                  className='action-button-edit'
                 >
                   Edit
                 </button>
@@ -76,14 +76,14 @@ export default class Evaluasi extends Component {
       },
     ],
     body: [],
-    idUjian: "",
-    inputMataPelajaran: "",
-    inputDurasi: "",
-    inputBankSoal: "",
+    idUjian: '',
+    inputMataPelajaran: '',
+    inputDurasi: '',
+    inputBankSoal: '',
     showModal: false,
-    idKelas: "",
-    status: "",
-    tanggalTes: "",
+    idKelas: '',
+    status: '',
+    tanggalTes: '',
     listBankSoal: [],
   };
 
@@ -107,52 +107,53 @@ export default class Evaluasi extends Component {
 
   fetchUjian = () => {
     const requestOptions = {
-      method: "GET",
-      redirect: "follow",
+      method: 'GET',
+      redirect: 'follow',
     };
 
     fetch(`${process.env.REACT_APP_API_URL}/ujian`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         const requestOptions = {
-          method: "GET",
-          redirect: "follow",
+          method: 'GET',
+          redirect: 'follow',
         };
 
         fetch(`${process.env.REACT_APP_API_URL}/bank-soal`, requestOptions)
           .then((response) => response.json())
           .then((result) => {
+            console.log(data);
             this.setState({
               body: data,
               listBankSoal: result,
-              inputMataPelajaran: "",
-              inputDurasi: "",
-              inputBankSoal: "",
+              inputMataPelajaran: '',
+              inputDurasi: '',
+              inputBankSoal: '',
             });
           })
-          .catch((error) => console.log("error", error));
+          .catch((error) => console.log('error', error));
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleAddButton = () => {
     const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Content-Type', 'application/json');
 
     const raw = JSON.stringify({
       id_kelas: 1,
       id_bank_soal: parseInt(this.state.inputBankSoal),
       mata_pelajaran: this.state.inputMataPelajaran,
       status: 1,
-      tanggal_tes: "2020-4-4",
+      tanggal_tes: '2020-4-4',
       durasi: this.state.inputDurasi,
     });
 
     const requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      redirect: 'follow',
     };
 
     fetch(`${process.env.REACT_APP_API_URL}/ujian`, requestOptions)
@@ -160,12 +161,12 @@ export default class Evaluasi extends Component {
       .then((result) => {
         this.fetchUjian();
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleEditButton = () => {
     const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append('Content-Type', 'application/json');
 
     const raw = JSON.stringify({
       id_kelas: this.state.idKelas,
@@ -177,10 +178,10 @@ export default class Evaluasi extends Component {
     });
 
     const requestOptions = {
-      method: "PUT",
+      method: 'PUT',
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      redirect: 'follow',
     };
 
     fetch(
@@ -191,13 +192,13 @@ export default class Evaluasi extends Component {
       .then((result) => {
         this.fetchUjian();
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleClickDelete = (id) => {
     var requestOptions = {
-      method: "DELETE",
-      redirect: "follow",
+      method: 'DELETE',
+      redirect: 'follow',
     };
 
     fetch(`${process.env.REACT_APP_API_URL}/ujian/${id}`, requestOptions)
@@ -205,7 +206,7 @@ export default class Evaluasi extends Component {
       .then((result) => {
         this.fetchUjian();
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log('error', error));
   };
 
   handleOpenModalAdd = () => {
@@ -215,9 +216,9 @@ export default class Evaluasi extends Component {
   handleCloseModal = () => {
     this.setState({
       showModal: false,
-      inputMataPelajaran: "",
-      inputDurasi: "",
-      inputBankSoal: "",
+      inputMataPelajaran: '',
+      inputDurasi: '',
+      inputBankSoal: '',
     });
   };
 
@@ -244,8 +245,8 @@ export default class Evaluasi extends Component {
       <div>
         <ReactModal
           isOpen={this.state.showModal}
-          className="modal-custom"
-          overlayClassName="modal-overlay-custom"
+          className='modal-custom'
+          overlayClassName='modal-overlay-custom'
         >
           <h5>Tambah Evaluasi</h5>
 
@@ -253,29 +254,29 @@ export default class Evaluasi extends Component {
           <input
             value={this.state.inputMataPelajaran}
             onChange={this.onChangeMataPelajaran}
-            type="text"
-            className="form-control mb-3"
-            placeholder="Nama Evaluasi"
+            type='text'
+            className='form-control mb-3'
+            placeholder='Nama Evaluasi'
           />
 
           <div>Durasi (Menit)</div>
           <input
             value={this.state.inputDurasi}
             onChange={this.onChangeDurasi}
-            type="number"
-            className="form-control mb-3"
-            placeholder="Durasi (Menit)"
+            type='number'
+            className='form-control mb-3'
+            placeholder='Durasi (Menit)'
           />
 
           <div>Bank Soal</div>
           <select
-            className="form-control w-25 mb-4"
-            name="bank-soal"
-            id="bank-soal"
+            className='form-control w-25 mb-4'
+            name='bank-soal'
+            id='bank-soal'
             value={this.inputBankSoal}
             onChange={this.onChangeBankSoal}
           >
-            <option value="-1">Pilih Bank Soal</option>
+            <option value='-1'>Pilih Bank Soal</option>
             {this.state.listBankSoal.map((data) => {
               return (
                 <option key={data.id} value={data.id}>
@@ -287,7 +288,7 @@ export default class Evaluasi extends Component {
 
           {this.state.edit ? (
             <button
-              className="btn btn-success mr-3"
+              className='btn btn-success mr-3'
               onClick={() => {
                 this.handleEditButton();
                 this.handleCloseModal();
@@ -297,7 +298,7 @@ export default class Evaluasi extends Component {
             </button>
           ) : (
             <button
-              className="btn btn-info mr-3"
+              className='btn btn-info mr-3'
               onClick={() => {
                 this.handleAddButton();
                 this.handleCloseModal();
@@ -306,19 +307,19 @@ export default class Evaluasi extends Component {
               Tambah
             </button>
           )}
-          <button className="btn btn-warning" onClick={this.handleCloseModal}>
+          <button className='btn btn-warning' onClick={this.handleCloseModal}>
             Cancel
           </button>
         </ReactModal>
 
         <SideBar />
-        <BreadCumbs content="/Evaluasi" />
+        <BreadCumbs content='/Evaluasi' />
         <Container>
-          <div className="page-box">
-            <div className="d-flex mb-3">
+          <div className='page-box'>
+            <div className='d-flex mb-3'>
               <button
                 onClick={this.handleOpenModalAdd}
-                className="btn btn-info"
+                className='btn btn-info'
               >
                 <span>
                   <i className={`fas fa-plus`}></i>
