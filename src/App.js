@@ -6,6 +6,7 @@ import Authentication from "./Contexts/Authentication";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import Kelas from "./Pages/Kelas";
+import Aktivitas from "./Pages/Aktivitas";
 import Evaluasi from "./Pages/Evaluasi";
 import Siswa from "./Pages/Siswa";
 import Materi from "./Pages/Materi";
@@ -34,6 +35,11 @@ export default class App extends Component {
               exact
               path="/kelas"
               component={Kelas}
+            ></ProtectedRoute>
+            <ProtectedRoute
+              exact
+              path="/aktivitas"
+              component={Aktivitas}
             ></ProtectedRoute>
             <ProtectedRoute
               exact
