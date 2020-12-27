@@ -27,6 +27,11 @@ class Aktivitas extends Component {
             sortType: 'basic',
           },
           {
+            Header: 'Gaya Belajar',
+            accessor: 'gaya_siswa',
+            sortType: 'basic',
+          },
+          {
             Header: "Akses Gaya Belajar",
             accessor: "gaya",
             sortType: 'basic',
@@ -86,6 +91,7 @@ class Aktivitas extends Component {
   populateAktivitas = (res) => {
     return res.map((data) => {
       let gayaBelajar = 'Accommodator';
+      let gayaSiswa = 'Accommodator';
       
       if (data.id_gaya_belajar === 2) {
         gayaBelajar = 'Diverger';
@@ -94,10 +100,20 @@ class Aktivitas extends Component {
       } else if (data.id_gaya_belajar === 4) {
         gayaBelajar = 'Converger';
       }
+      const siswa = this.state.siswa.find((el) => el.id === data.id_siswa);
+
+      if (siswa.id_gaya_belajar === 2) {
+        gayaSiswa = 'Diverger';
+      } else if (siswa.id_gaya_belajar === 3) {
+        gayaSiswa = 'Assimilator';
+      } else if (siswa.id_gaya_belajar === 4) {
+        gayaSiswa = 'Converger';
+      }
         
       return {
-        nama: this.state.siswa.find((el) => el.id === data.id_siswa).nama,
+        nama: siswa.nama,
         gaya: gayaBelajar,
+        gaya_siswa: gayaSiswa,
         waktu: data.waktu
       }
     });
