@@ -39,6 +39,11 @@ export default class Siswa extends Component {
             sortType: 'basic',
           },
           {
+            Header: 'Kunci',
+            accessor: 'lock',
+            sortType: 'basic'
+          },
+          {
             Header: 'Action',
             accessor: 'id',
             Cell: ({ row }) => (
@@ -74,6 +79,7 @@ export default class Siswa extends Component {
     inputGaya: '',
     inputPassword: '',
     inputKonfirmasi: '',
+    inputLock: 0,
     idSiswa: '',
     idKelas: '',
     namaKelas: '',
@@ -109,6 +115,12 @@ export default class Siswa extends Component {
       inputKonfirmasi: event.target.value,
     });
   };
+
+  onChangeLock = (event) => {
+    this.setState({
+      inputLock: event.target.checked ? 1 : 0
+    })
+  }
 
   onClickDelete = (id) => {
     const requestOptions = {
@@ -158,6 +170,7 @@ export default class Siswa extends Component {
       id_kelas: this.state.idKelas,
       nama: this.state.inputNama,
       password: this.state.inputPassword,
+      lock: this.state.inputLock
     });
 
     const requestOptions = {
@@ -186,6 +199,7 @@ export default class Siswa extends Component {
       id_kelas: this.state.idKelas,
       nama: this.state.inputNama,
       password: this.state.inputPassword,
+      lock: this.state.inputLock
     });
 
     const requestOptions = {
@@ -222,6 +236,7 @@ export default class Siswa extends Component {
       inputKonfirmasi: data.password,
       idSiswa: data.id,
       idKelas: data.id_kelas,
+      inputLock: data.lock
     });
   };
 
@@ -233,6 +248,7 @@ export default class Siswa extends Component {
       inputGaya: '',
       inputPassword: '',
       inputKonfirmasi: '',
+      inputLock: 0
     });
   };
 
@@ -315,7 +331,19 @@ export default class Siswa extends Component {
                   <p className='text-danger'>
                     Password dan Konfirmasi Password Tidak Sama
                   </p>
-                )}
+                  )}
+                
+                <div className='form-group'>
+                  <input
+                    checked={this.state.inputLock === 1 ? true : false}
+                    onChange={this.onChangeLock}
+                    type='checkbox'
+                    className='form-control mb-3'
+                    id='kunci-gaya'
+                  />
+                  <label htmlFor='kunci-gaya'>Kunci Gaya Belajar</label>
+                </div>
+
                 {this.state.edit ? (
                   <button
                     className='btn btn-success mr-3'
